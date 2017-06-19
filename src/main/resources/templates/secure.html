@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+    <title>You are in!</title>
+</head>
+<body>
+<h1>You made it!</h1>
+<div sec:authorize="hasAuthority('USER')">
+    User
+</div>
+<div sec:authorize="hasAuthority('ADMIN')">
+    Admin
+</div>
+<a th:href="@{/logout}"> Now logout </a>
+<div>
+    Logged user: <span sec:authentication="name">Anoynomous</span><br/>
+    Roles: <span sec:authentication="principal.authorities">[USER, ADMIN]</span>
+</div>
+</body>
+</html>
