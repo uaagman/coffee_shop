@@ -1,5 +1,6 @@
 package com.ashokn.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -10,29 +11,30 @@ import javax.persistence.*;
  * Created by ashok on 6/20/17.
  */
 @Entity
-@Table(name = "authorities", uniqueConstraints = @UniqueConstraint(columnNames = { "authority", "username" }))
+@Table(name = "authorities", uniqueConstraints = @UniqueConstraint(columnNames = { "authority", "user_id" }))
 public class Authority extends Model{
 
     @ManyToOne
-    @JoinColumn(name = "username", nullable = false)
-    private User user;
+    @JsonBackReference
+    @JoinColumn(name = "user_id", nullable = false)
+    private Person person;
 
     @Column(name = "authority", nullable = false, length = 45)
     private String authority;
 
-    public Authority(User user,String authority){
-        this.user = user;
+    public Authority(Person user,String authority){
+        this.person = user;
         this.authority = authority;
     }
 
     public Authority(){}
 
     public Person getPerson() {
-        return user;
+        return person;
     }
 
-    public void setPerson(User user) {
-        this.user = user;
+    public void setPerson(Person user) {
+        this.person = user;
     }
 
     public String getAuthority() {

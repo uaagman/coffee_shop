@@ -1,5 +1,6 @@
 package com.ashokn.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class Order extends Model{
 	@NotNull(message = "OrderLines shouldn't be null")
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Valid
+	@JsonManagedReference
 	private List<Orderline> orderLines = new ArrayList<>();
-
-	@NotNull(message = "Person shouldn't be null")
+    @NotNull(message = "Person shouldn't be null")
 	@OneToOne()
 	private Person person;
 
@@ -33,8 +34,12 @@ public class Order extends Model{
 	}
 
 	public List<Orderline> getOrderLines() {
-		return Collections.unmodifiableList(orderLines);
+		return orderLines;
 	}
+
+    public void setOrderLines(List<Orderline> orderLines) {
+        this.orderLines = orderLines;
+    }
 
 	public Person getPerson() {
 		return person;
@@ -86,4 +91,12 @@ public class Order extends Model{
 		orderLines.clear();
 	}
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderDate=" + orderDate +
+                ", orderLines=" + orderLines +
+                ", person=" + person +
+                '}';
+    }
 }

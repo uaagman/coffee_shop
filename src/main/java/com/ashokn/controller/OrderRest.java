@@ -3,6 +3,7 @@ package com.ashokn.controller;
 import com.ashokn.model.Order;
 import com.ashokn.model.Person;
 import com.ashokn.model.Product;
+import com.ashokn.service.OrderDto;
 import com.ashokn.service.OrderService;
 import com.ashokn.service.PersonService;
 import com.ashokn.service.ProductService;
@@ -43,8 +44,13 @@ public class OrderRest {
         return Response.ok().entity(orderService.findByPerson(person)).build();
     }
 
+    @GetMapping("/{id}")
+    public Response findById(@PathVariable int id){
+        return Response.ok().entity(orderService.findById(id)).build();
+    }
+
     @PostMapping("")
-    public Response saveOrder(@RequestBody Order order){
+    public Response saveOrder(@Validated @RequestBody OrderDto order){
         try {
             Order ord = orderService.save(order);
             return Response.ok().entity(ord).build();

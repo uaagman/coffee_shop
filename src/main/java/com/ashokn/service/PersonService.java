@@ -1,8 +1,11 @@
 package com.ashokn.service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.ashokn.model.Authority;
 import com.ashokn.model.Person;
 import com.ashokn.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class PersonService {
 	}
 
 	public Person savePerson(Person person) {
+        Authority authority = new Authority(person,"USER");
+        person.setAuthorities(Collections.singletonList(authority));
 		return personRepository.save(person);
 	}
 
@@ -47,6 +52,9 @@ public class PersonService {
 		person.getAddress().setCreatedAt(person1.getAddress().getCreatedAt());
 		person.getAddress().setUpdatedAt(new Date());
 		person.getAddress().setId(person1.getAddress().getId());
+		if(person.getPassword() == null){
+            person.setPassword(person1.getPassword());
+        }
 		return savePerson(person);
 	}
 

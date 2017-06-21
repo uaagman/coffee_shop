@@ -1,5 +1,6 @@
 package com.ashokn.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ public class Orderline extends Model{
 	@NotNull(message = "Product can't be null")
 	private Product product;
 	@ManyToOne
+	@JsonBackReference
     @NotNull(message = "Order cannot be null")
 	private Order order;
 

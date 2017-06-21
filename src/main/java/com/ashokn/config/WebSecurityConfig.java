@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()*/
             .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/secure",true)
+//                .defaultSuccessUrl("/secure")
                 .failureUrl("/login?error")
             	.permitAll()
             	.and()
@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 //		auth.inMemoryAuthentication().withUser("super").password("pw").roles("ADMIN");
-		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select username,password, enabled from users where username=?")
-				.authoritiesByUsernameQuery("select username, authority from authorities where username=(select id from users where username=?)");
+		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select email,password, enabled from users where email=?")
+				.authoritiesByUsernameQuery("select user_id, authority from authorities where user_id=(select id from users where email=?)");
 	}
 }

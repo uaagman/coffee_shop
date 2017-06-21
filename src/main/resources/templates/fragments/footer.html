@@ -5,11 +5,15 @@
 </head>
 <body>
 
-<div th:fragment="footer">
-    &copy; 2017 Footer
+<div th:fragment="footer" class="footer">
+        &copy; 2017 Footer
+    <script src="/static/js/jQuery.min.js" th:src="@{/js/jQuery.min.js}"></script>
+    <script src="/static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 </div>
-<div th:fragment="footer-admin">
-    &copy; 2017 LoggedIn Footer
+<div th:fragment="footer-admin" class="footer">
+        &copy; 2017 LoggedIn Footer
+    <script src="/static/js/jQuery.min.js" th:src="@{/js/jQuery.min.js}"></script>
+    <script src="/static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 </div>
 </body>
 </html>

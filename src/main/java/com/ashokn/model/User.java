@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * Created by ashok on 6/20/17.
  */
-@Entity
-@Table(name = "users")
+//@Entity
+//@Table(name = "users")
 public class User extends Person {
 
     @Column(unique = true)

@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="fragments/header :: head">
+    <title>Home</title>
 </head>
 <body>
+<link rel="stylesheet" href="#" th:href="@{/css/login.css}" type="text/css"/>
+<div th:replace="fragments/header :: header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Coffee Shop</a>
+            </div>
+        </div>
+    </nav>
+</div>
 
+<div class="jumbotron">
+</div>
+<div class="container">
+    <div class="loginmodal-container">
+        <div class="error" th:if="${param.error}"
+             th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+            Reason: <span th:text="${errorMsg}">Wrong input!</span>
+        </div>
+        <h1>Sign Up</h1><br/>
+        <form class="" method="post" action="/register" th:action="@{/register}">
+            <div class="form-group">
+                <input type="text" placeholder="Email" class="form-control" name="email"/>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" class="form-control" name="password"/>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="First Name" class="form-control" name="firstName"/>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Last Name" class="form-control" name="lastName"/>
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Phone" class="form-control" name="phone"/>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="City" class="form-control" name="address.city"/>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="State" class="form-control" name="address.state"/>
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Country" class="form-control" name="address.country"/>
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Zip Code" class="form-control" name="address.zipcode"/>
+            </div>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-success">Sign up</button>
+        </form>
+    </div>
+</div>
+
+
+<div th:replace="fragments/footer :: ${#authorization.expression('isAuthenticated()')} ? 'footer-admin' : 'footer'">
+    &copy; 2017 The Static Templates
+</div>
 </body>
 </html>
