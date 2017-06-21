@@ -1,5 +1,6 @@
 package com.ashokn.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ashokn.model.Product;
@@ -54,5 +55,12 @@ public class ProductService   {
 	public List<Product> findByProductType(ProductType productType) {
 		 return productRepository.findByProductType(productType);
 	}
-	
+
+	public Product update(Product product){
+        Product product1 = getProduct(product.getId());
+        product.setCreatedAt(product1.getCreatedAt());
+        product.setUpdatedAt(new Date());
+        return save(product);
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 /**
  * Created by ashok on 6/17/17.
@@ -63,8 +64,8 @@ public class ProductRest {
     public Response update(@PathVariable("id") int id,@Validated @RequestBody Product product){
         try{
             product.setId(id);
-            productService.save(product);
-            return Response.ok().entity(productService.getProduct(id)).build();
+            Product product1 = productService.update(product);
+            return Response.ok().entity(product1).build();
         }catch (Exception ex){
             return Response.status(500).entity("Error updating product!").build();
         }

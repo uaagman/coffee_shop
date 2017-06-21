@@ -1,5 +1,6 @@
 package com.ashokn.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ashokn.model.Person;
@@ -27,16 +28,26 @@ public class PersonService {
 		return personRepository.findAll();
 	}
 
-	public List<Person> findByEmail(String email) {
+	public Person findByEmail(String email) {
 		return personRepository.findByEmail(email);
 	}
 
 	public Person findById(int id) {
-		return personRepository.findOne((long) id);
+		return personRepository.findById(id);
 	}
 
 	public void removePerson(Person person) {
 		personRepository.delete(person);
+	}
+
+	public Person updatePerson(Person person){
+		Person person1 = findById(person.getId());
+		person.setCreatedAt(person1.getCreatedAt());
+		person.setUpdatedAt(new Date());
+		person.getAddress().setCreatedAt(person1.getAddress().getCreatedAt());
+		person.getAddress().setUpdatedAt(new Date());
+		person.getAddress().setId(person1.getAddress().getId());
+		return savePerson(person);
 	}
 
 }

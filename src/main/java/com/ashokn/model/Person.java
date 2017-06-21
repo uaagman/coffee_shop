@@ -1,59 +1,38 @@
 package com.ashokn.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ashokn.validator.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "users")
+@Table(name = "persons")
 public class Person extends Model{
 
-	@Column(unique = true)
-	@NotEmpty(message = "Username can't be empty")
-	private String username;
-	@NotEmpty(message = "Password can't be empty")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String password;
-	private boolean enabled=true;
 	@NotEmpty(message = "First name can't be empty")
 	private String firstName;
+
 	@NotEmpty(message = "Last name can't be empty")
 	private String lastName;
+
+	@Column(unique = true)
 	@NotEmpty(message = "Email can't be empty")
 	@Email(message = "Email should be valid")
+    @UniqueEmail
 	private String email;
+
 	@OneToOne(cascade = CascadeType.ALL)
     @NotNull(message = "Address can't be null")
+	@Valid
     private Address address;
+
+	@Pattern(regexp="\\d{10}",message = "Invalid phone format. should be 10 digits")
 	private String phone;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
 
 	public String getFirstName() {
 		return firstName;

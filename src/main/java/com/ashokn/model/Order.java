@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -18,12 +19,13 @@ public class Order extends Model{
 	@Temporal(TemporalType.DATE)
 	private Date orderDate;
 
-	@NotNull(message = "OrderList shouldn't be null")
+	@NotNull(message = "OrderLines shouldn't be null")
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Valid
 	private List<Orderline> orderLines = new ArrayList<>();
 
 	@NotNull(message = "Person shouldn't be null")
-	@OneToOne
+	@OneToOne()
 	private Person person;
 
 	public int getId() {

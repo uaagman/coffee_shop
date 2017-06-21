@@ -1,6 +1,7 @@
 package com.ashokn.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,13 +16,13 @@ public abstract class Model {
     protected int id;
 
     @Column(name = "created_at",nullable = false,updatable = false)
-    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected Date createdAt;
 
     @Column(name = "updated_at",nullable = false)
-    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected Date updatedAt;
 
     public int getId() {
@@ -52,7 +53,7 @@ public abstract class Model {
     @PreUpdate
     public void updateTimeStamp(){
         updatedAt = new Date();
-        if(createdAt == null){
+        if(createdAt == null && id == 0){
             createdAt = new Date();
         }
     }

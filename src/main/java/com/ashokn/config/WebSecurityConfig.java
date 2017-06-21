@@ -22,18 +22,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/home", "/index","/css/**","/rs/**").permitAll()
+                .antMatchers("/", "/home", "/index","/css/**","/rs/**","/js/**","/register").permitAll()
 //                .antMatchers(HttpMethod.POST,"/save").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
             /*.httpBasic()
                 .and()*/
             .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/secure",true)
+                .failureUrl("/login?error")
             	.permitAll()
             	.and()
             .logout()
             	.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            	.logoutSuccessUrl("/").permitAll()
+            	.logoutSuccessUrl("/login?logout").permitAll()
                 .and()
             .csrf()
                 .ignoringAntMatchers("/rs/**");
@@ -42,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 //		auth.inMemoryAuthentication().withUser("super").password("pw").roles("ADMIN");
-		auth.jdbcAuthentication().dataSource(dataSource);
+		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select username,password, enabled from users where username=?")
+				.authoritiesByUsernameQuery("select username, authority from authorities where username=(select id from users where username=?)");
 	}
 }
