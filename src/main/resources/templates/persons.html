@@ -44,7 +44,7 @@
         </tr>
         <!--/*@thymesVar id="u" type="com.ashokn.model.Person"*/-->
         <tr th:each="u : ${users}">
-            <td th:text="${u.firstName} + ${u.lastName}">Latte</td>
+            <td th:text="${u.firstName} +' '+ ${u.lastName}">Latte</td>
             <td th:text="${u.email}">BREAKFAST</td>
             <td th:text="${u.phone}">100</td>
             <td th:text="${#calendars.format(u.updatedAt,'dd/MMM/yyyy')}">21 jan 2017</td>

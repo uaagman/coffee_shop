@@ -49,14 +49,16 @@ public class HomeController {
 
     @PostMapping("/register")
 	public String register(@Valid Person person, BindingResult result, Model model, Principal principal){
-        if(principal == null){
+        if(principal != null){
             return "redirect:/home";
         }
         if(!result.hasErrors()){
             personService.savePerson(person);
             return "redirect:/login";
+        }else{
+            return null;
         }
-    	return "register";
+
 	}
 
 	@PostMapping("/order")

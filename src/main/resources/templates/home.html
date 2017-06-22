@@ -51,7 +51,7 @@
                 <button th:onclick="'javascript:showProduct(' + ${p.id} + ')'">view</button>
                 <!--<a href="#" th:href="@{/product/{path}(path=${p.id})}">a</a>-->
             </td>
-            <th>
+            <th th:if="${#authorization.expression('isAuthenticated()')}">
                 <form method="post" action="/order" th:action="@{/order}">
                     <input type="hidden" name="productId" th:value="${p.id}"/>
                     <input type="number" placeholder="Quantity" name="quantity" required="required"/>

@@ -9,14 +9,22 @@ import com.ashokn.model.Authority;
 import com.ashokn.model.Person;
 import com.ashokn.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 @Service
 @Transactional
 public class PersonService {
 
 	private final PersonRepository personRepository;
+
+	@Resource
+    private BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
 	public PersonService(PersonRepository personRepository) {
@@ -26,10 +34,12 @@ public class PersonService {
 	public Person savePerson(Person person) {
         Authority authority = new Authority(person,"USER");
         person.setAuthorities(Collections.singletonList(authority));
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
 		return personRepository.save(person);
 	}
 
     public Person savePersonAdmin(Person person) {
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
     }
 
@@ -57,7 +67,7 @@ public class PersonService {
 		person.getAddress().setUpdatedAt(new Date());
 		person.getAddress().setId(person1.getAddress().getId());
 		if(person.getPassword() == null || person.getPassword().equals("")){
-            person.setPassword(person1.getPassword());
+            person.setPassword(passwordEncoder.encode(person1.getPassword()));
         }
         person.setAuthorities(person1.getAuthorities());
 		return personRepository.save(person);
