@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="fragments/header :: head">
+    <title>Home</title>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Coffee Shop</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="jumbotron"></div>
+
+<div class="container">
+    <div th:if="${success}">
+        <span th:text="${success}">.</span>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>Order Date</th>
+            <th>Person</th>
+            <th>Total Items</th>
+            <th>Total Amount</th>
+            <th></th>
+        </tr>
+        <!--/*@thymesVar id="o" type="com.ashokn.model.Order"*/-->
+        <tr th:each="o : ${orders}">
+            <td th:text="${o.orderDate}">today</td>
+            <td><span th:text="${o.person.firstName}">First</span><span th:text="${o.person.lastName}">Last</span> </td>
+            <td th:text="${o.quantity}">today</td>
+            <td th:text="${o.totalAmount}">today</td>
+            <td><button th:onclick="'javascript:showOrders(' + ${o.id} + ')'">view</button></td>
+        </tr>
+    </table>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Order Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div><strong>Order Date: </strong><span id="oDate"></span></div>
+                <div><strong>Person Name: </strong><span id="oPersonName"></span></div>
+                <div><strong>Person Email: </strong><span id="oPersonEmail"></span></div>
+                <div><strong>Person Phone: </strong><span id="oPersonPhone"></span></div>
+                <div><strong>Total Items: </strong><span id="oTotalItems"></span></div>
+                <div><strong>Total Amount: </strong><span id="oTotalAmount"></span></div>
+                <table class="table" id="ord">
+                    <thead>
+                    <tr><th>Product</th><th>Quantity</th><th>Per Price</th><th>Subtotal</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: ${#authorization.expression('isAuthenticated()')} ? 'footer-admin' : 'footer'">
+    &copy; 2017 The Static Templates
+</div>
+
+<script rel="script">
+    function showOrders(oId){
+        $.ajax({
+            url: "/rs/order/"+oId,
+            method:"get",
+            success:function (data) {
+                if(data.status == 200){
+                    var value = data.entity;
+                    $("#oDate").html(value.orderDate);
+                    $("#oPersonName").html(value.person.firstName + " "+value.person.lastName);
+                    $("#oPersonEmail").html(value.person.email);
+                    $("#oPersonPhone").html(value.person.phone);
+                    $("#oTotalItems").html(value.quantity);
+                    $("#oTotalAmount").html(value.totalAmount);
+                    var d = "";
+                    $.each(value.orderLines,function (k,v) {
+                        d += "<tr><td>"+v.product.productName+"</td><td>"+v.quantity+"</td><td>"+v.price+"</td>";
+                        d += "<td>"+v.subtotal+"</td></tr>";
+                    });
+                    $("#ord tbody").html(d);
+
+                    $("#myModal").modal("show");
+                }else{
+                    $("#oDate").html("");
+                    $("#oTotalItems").html("");
+                    $("#oTotalAmount").html("");
+                    $("#ord tbody").html("");
+                    $("#myModal").modal("show");
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

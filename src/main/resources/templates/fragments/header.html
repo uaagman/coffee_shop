@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head">
     <title>CoffeeShop</title>
     <meta charset="utf-8"/>
@@ -33,6 +33,15 @@
                 </li>
                 <li th:classappend="${module == 'order' ? 'active' : ''}" th:if="${#authorization.expression('isAuthenticated()')}">
                     <a href="#" th:href="@{/order}">Orders</a>
+                </li>
+                <li th:classappend="${module == 'manageProduct' ? 'active' : ''}" sec:authorize="hasAuthority('ADMIN')">
+                    <a href="#" th:href="@{/products}">Manage Products</a>
+                </li>
+                <li th:classappend="${module == 'persons' ? 'active' : ''}" sec:authorize="hasAuthority('ADMIN')">
+                    <a href="#" th:href="@{/persons}">Manage Persons</a>
+                </li>
+                <li th:classappend="${module == 'allOrders' ? 'active' : ''}" sec:authorize="hasAuthority('ADMIN')">
+                    <a href="#" th:href="@{/allOrders}">All Orders</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

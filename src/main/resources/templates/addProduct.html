@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="fragments/header :: head">
+    <title>Home</title>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Coffee Shop</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="jumbotron">
+    <h2>Add Product</h2>
+</div>
+
+<div class="container">
+    <div th:if="${success}">
+        <span th:text="${sucess}">...</span>
+    </div>
+    <!--/*@thymesVar id="product" type="com.ashokn.model.Product"*/-->
+    <form th:action="@{/addProduct}" method="post" th:object="${pro}">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Name" class="form-control" name="productName" required="required"/>
+            <!--<span class="error" th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}">Name Error</span>-->
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <input type="number" placeholder="Price" class="form-control" name="price"  required="required"/>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" required="required" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="proType">Product Type</label>
+            <select name="productType" id="proType" required="required" class="form-control">
+                <option value="" selected="selected" disabled="disabled">---select Product Type ---</option>
+                <option th:each="p : ${productTypes}" th:value="${p}" th:text="${p}"></option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Add</button>
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: ${#authorization.expression('isAuthenticated()')} ? 'footer-admin' : 'footer'">
+    &copy; 2017 The Static Templates
+</div>
+
+</body>
+</html>

@@ -1,17 +1,22 @@
 package com.ashokn.controller;
 
+import com.ashokn.model.Authority;
 import com.ashokn.model.Person;
+import com.ashokn.model.Product;
+import com.ashokn.model.ProductType;
 import com.ashokn.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.ws.rs.GET;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +48,10 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-	public String register(@Valid Person person, BindingResult result, Model model){
+	public String register(@Valid Person person, BindingResult result, Model model, Principal principal){
+        if(principal == null){
+            return "redirect:/home";
+        }
         if(!result.hasErrors()){
             personService.savePerson(person);
             return "redirect:/login";
@@ -71,6 +79,18 @@ public class HomeController {
     public String getProfile(Model model, Principal principal){
         model.addAttribute("profile",personService.findByEmail(principal.getName()));
         return "profile";
+    }
+
+    @PostMapping("/updateProfile/{id}")
+    public String updateProfile(@Valid Person person,BindingResult result,@PathVariable int id,RedirectAttributes redirectAttributes){
+        if(result.hasErrors()){
+            redirectAttributes.addFlashAttribute("success","Error Updating");
+        }else {
+            person.setId(id);
+            personService.updatePerson(person);
+            redirectAttributes.addFlashAttribute("success", "Updated profile successfully");
+        }
+        return "redirect:/profile";
     }
 
     @GetMapping("/order")

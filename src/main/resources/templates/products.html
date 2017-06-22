@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="fragments/header :: head">
+    <title>Home</title>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Coffee Shop</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="jumbotron">
+    <h2>Products</h2>
+</div>
+
+<div class="container">
+    <div th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+    <a class="btn btn-default pull-right" th:href="@{/addProduct}">Add Product</a>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Last Updated</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="p : ${products}">
+            <td th:text="${p.productName}">Latte</td>
+            <td th:text="${p.productType}">BREAKFAST</td>
+            <td th:text="${p.price}">100</td>
+            <td th:text="${#calendars.format(p.updatedAt,'dd/MMM/yyyy')}">21 jan 2017</td>
+            <td>
+                <button class="btn btn-primary" th:onclick="'javascript:showProduct(' + ${p.id} + ')'">view</button>
+                <a class="btn btn-default" th:href="@{/editProduct/{pid}(pid=${p.id})}">Edit</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <div><strong>Product Name: </strong><span id="pName"></span></div>
+                <div><strong>Product Type: </strong><span id="pType"></span></div>
+                <div><strong>price: </strong><span id="pPrice"></span></div>
+                <div><strong>Description: </strong><span id="pDescription"></span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: ${#authorization.expression('isAuthenticated()')} ? 'footer-admin' : 'footer'">
+    &copy; 2017 The Static Templates
+</div>
+
+<script rel="script">
+    function showProduct(pId){
+        $.ajax({
+            url: "/rs/product/"+pId,
+            method:"get",
+            success:function (data) {
+                if(data.status == 200){
+                    $("#pName").html(data.entity.productName);
+                    $("#pType").html(data.entity.productType);
+                    $("#pPrice").html(data.entity.price);
+                    $("#pDescription").html(data.entity.description);
+                    $("#myModal .modal-title").html(data.entity.productName);
+                    $("#myModal").modal("show");
+                }else{
+                    $("#pName").html("");
+                    $("#pType").html("");
+                    $("#pPrice").html("");
+                    $("#pDescription").html("");
+                    $("#myModal .modal-title").html("Error Fetching !!!!!");
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="fragments/header :: head">
+    <title>Home</title>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Coffee Shop</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="jumbotron">
+    <h2>Persons</h2>
+</div>
+
+<div class="container">
+    <div th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+    <div th:if="${success}">
+        <span th:text="${success}"></span>
+    </div>
+    <a class="btn btn-default pull-right" th:href="@{/addUser}">Add User</a>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Last Updated</th>
+            <th>Addres</th>
+            <th>Authorities</th>
+        </tr>
+        <!--/*@thymesVar id="u" type="com.ashokn.model.Person"*/-->
+        <tr th:each="u : ${users}">
+            <td th:text="${u.firstName} + ${u.lastName}">Latte</td>
+            <td th:text="${u.email}">BREAKFAST</td>
+            <td th:text="${u.phone}">100</td>
+            <td th:text="${#calendars.format(u.updatedAt,'dd/MMM/yyyy')}">21 jan 2017</td>
+            <th th:text="${u.address.city} +', '+ ${u.address.state} +', '+ ${u.address.country} +' - '+ ${u.address.zipcode}"></th>
+            <td>
+                <table>
+                    <tr th:each="a: ${u.authorities}">
+                        <td th:text="${a.authority}">NONE</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <div><strong>Product Name: </strong><span id="pName"></span></div>
+                <div><strong>Product Type: </strong><span id="pType"></span></div>
+                <div><strong>price: </strong><span id="pPrice"></span></div>
+                <div><strong>Description: </strong><span id="pDescription"></span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: ${#authorization.expression('isAuthenticated()')} ? 'footer-admin' : 'footer'">
+    &copy; 2017 The Static Templates
+</div>
+
+</body>
+</html>

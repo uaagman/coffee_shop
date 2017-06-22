@@ -29,6 +29,10 @@ public class PersonService {
 		return personRepository.save(person);
 	}
 
+    public Person savePersonAdmin(Person person) {
+        return personRepository.save(person);
+    }
+
 	public List<Person> findAll(){
 		return personRepository.findAll();
 	}
@@ -52,10 +56,11 @@ public class PersonService {
 		person.getAddress().setCreatedAt(person1.getAddress().getCreatedAt());
 		person.getAddress().setUpdatedAt(new Date());
 		person.getAddress().setId(person1.getAddress().getId());
-		if(person.getPassword() == null){
+		if(person.getPassword() == null || person.getPassword().equals("")){
             person.setPassword(person1.getPassword());
         }
-		return savePerson(person);
+        person.setAuthorities(person1.getAuthorities());
+		return personRepository.save(person);
 	}
 
 }
