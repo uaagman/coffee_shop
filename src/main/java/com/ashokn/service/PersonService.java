@@ -67,8 +67,10 @@ public class PersonService {
 		person.getAddress().setUpdatedAt(new Date());
 		person.getAddress().setId(person1.getAddress().getId());
 		if(person.getPassword() == null || person.getPassword().equals("")){
-            person.setPassword(passwordEncoder.encode(person1.getPassword()));
-        }
+            person.setPassword(person1.getPassword());
+        }else{
+			person.setPassword(passwordEncoder.encode(person.getPassword()));
+		}
         person.setAuthorities(person1.getAuthorities());
 		return personRepository.save(person);
 	}

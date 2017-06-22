@@ -84,8 +84,8 @@ public class HomeController {
     }
 
     @PostMapping("/updateProfile/{id}")
-    public String updateProfile(@Valid Person person,BindingResult result,@PathVariable int id,RedirectAttributes redirectAttributes){
-        if(result.hasErrors()){
+    public String updateProfile(@Valid Person person,Principal principal,BindingResult result,@PathVariable int id,RedirectAttributes redirectAttributes){
+        if(result.hasErrors() || id != personService.findByEmail(principal.getName()).getId()){
             redirectAttributes.addFlashAttribute("success","Error Updating");
         }else {
             person.setId(id);
